@@ -1,0 +1,23 @@
+{
+    "name": "emiliomg/propel-provider-behavior-bundle",
+    "description": "A Symfony2 Bundle that wraps emiliomg/propel-provider-behavior and automatically generates the provider service definition.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emilio Markgraf",
+            "email": "emilio.markgraf@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Emiliomg\\Propel\\ProviderBehaviorBundle\\": "."
+        }
+    },
+    "require": {
+        "emiliomg/propel-provider-behavior": "^1.0",
+        "symfony/symfony": "2.1"
+    },
+    "require-dev": {
+        "emiliomg/debug": "^1.0"
+    }
+}
