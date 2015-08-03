@@ -1,0 +1,8 @@
+Propel has to be configured...
+new Propel\PropelBundle\PropelBundle(),
+
+new Emiliomg\Propel\ProviderBehaviorBundle\EmiliomgPropelProviderBehaviorBundle(),
+
+php app/console propel:model:build
+php app/console cache:clear
+php app/console container:debug | grep provider
