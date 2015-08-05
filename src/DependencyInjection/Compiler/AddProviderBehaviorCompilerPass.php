@@ -4,11 +4,14 @@ namespace Emiliomg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 class AddProviderBehaviorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+
+//        Reconfigure Propel Bundle to build all the models with a provider
         $definition = $container->getDefinition('propel.build_properties');
         $argument = $definition->getArgument(0);
 
@@ -23,5 +26,23 @@ class AddProviderBehaviorCompilerPass implements CompilerPassInterface
         $argument['propel.behavior.default'] = $argumentDefault;
 
         $definition->replaceArgument(0, $argument);
+
+//        Check if provider cache exists.
+//        If it does, use it to set the appropriate service definitions
+        $file = $container->getParameter('kernel.root_dir').'/../vendor/emiliomg/propel-provider-behavior/cache/providerCache.json';
+        if (file_exists($file)) {
+            $providers = json_decode(file_get_contents($file), true);
+            if (JSON_ERROR_NONE == json_last_error()) {
+                if (is_array($providers)) {
+                    foreach ($providers as $provider) {
+                        $providerId = strtolower(str_replace('\\', '_', $provider['namespace'])).
+                            '.provider.'.
+                            strtolower($provider['modelName']);
+                        $definition = new Definition($provider['providerNamespace']);
+                        $container->setDefinition($providerId, $definition);
+                    }
+                }
+            }
+        }
     }
 }
