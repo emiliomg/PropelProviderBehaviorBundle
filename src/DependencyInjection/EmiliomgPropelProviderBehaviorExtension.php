@@ -32,12 +32,14 @@ class EmiliomgPropelProviderBehaviorExtension extends Extension
         if (file_exists($file)) {
             $providers = json_decode(file_get_contents($file), true);
             if (JSON_ERROR_NONE == json_last_error()) {
-                foreach ($providers as $provider) {
-                    $providerId = strtolower(str_replace('\\', '_', $provider['namespace'])).
-                        '.provider.'.
-                        strtolower($provider['modelName']);
-                    $definition = new Definition($provider['providerNamespace']);
-                    $container->setDefinition($providerId, $definition);
+                if (is_array($providers)) {
+                    foreach ($providers as $provider) {
+                        $providerId = strtolower(str_replace('\\', '_', $provider['namespace'])).
+                            '.provider.'.
+                            strtolower($provider['modelName']);
+                        $definition = new Definition($provider['providerNamespace']);
+                        $container->setDefinition($providerId, $definition);
+                    }
                 }
             }
         }
