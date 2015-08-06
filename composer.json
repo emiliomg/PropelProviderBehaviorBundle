@@ -19,6 +19,7 @@
         "propel/propel-bundle": "^1.2"
     },
     "require-dev": {
-        "emiliomg/debug": "^1.0"
+        "emiliomg/debug": "^1.0",
+        "phpunit/phpunit": "^4.7"
     }
 }
