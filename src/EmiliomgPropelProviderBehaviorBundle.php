@@ -1,13 +1,12 @@
 <?php
 
-namespace Emiliomg\Propel\ProviderBehaviorBundle;
+namespace EmilioMg\Propel\ProviderBehaviorBundle;
 
-use Emiliomg\Propel\ProviderBehaviorBundle\DependencyInjection\EmiliomgPropelProviderBehaviorExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Emiliomg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler\AddProviderBehaviorCompilerPass;
+use EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler\AddProviderBehaviorCompilerPass;
 
-class EmiliomgPropelProviderBehaviorBundle extends Bundle
+class EmilioMgPropelProviderBehaviorBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Emiliomg\Propel\ProviderBehaviorBundle\DependencyInjection;
+namespace EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

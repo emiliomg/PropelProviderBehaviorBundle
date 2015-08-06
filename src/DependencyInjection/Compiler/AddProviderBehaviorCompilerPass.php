@@ -1,6 +1,6 @@
 <?php
 
-namespace Emiliomg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler;
+namespace EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
