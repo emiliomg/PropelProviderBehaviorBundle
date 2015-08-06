@@ -2,82 +2,38 @@
 
 namespace EmilioMg\Propel\ProviderBehaviorBundle\Tests\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Compiler\AnalyzeServiceReferencesPass;
-use Symfony\Component\DependencyInjection\Compiler\RepeatedPass;
-use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
+use EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler\AddProviderBehaviorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
-class RemoveUnusedDefinitionsPassTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class AddProviderBehaviorCompilerPassTest
+ *
+ * @author  Emilio Markgraf <emilio.markgraf@krankikom.de>
+ * @package EmilioMg\Propel\ProviderBehaviorBundle\Tests\DependencyInjection\Compiler
+ */
+class AddProviderBehaviorCompilerPassTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFoo()
+    public function testProcess()
     {
-        this->assertTrue(true);
+        $container = new ContainerBuilder();
+
+        $propelDefinition = new Definition();
+        $propelDefinition->addArgument([]);
+
+        $container->setDefinition('propel.build_properties', $propelDefinition);
+        $container->setParameter('kernel.root_dir', '.');
+
+        $compilerPass = new AddProviderBehaviorCompilerPass();
+        $compilerPass->process($container);
+
+        $argument = $propelDefinition->getArgument(0);
+        $this->assertArrayHasKey('propel.behavior.providerBase.behavior', $argument, 'Build properties should include the provider base behavior');
+        $this->assertArrayHasKey('propel.behavior.providerFassade.behavior', $argument, 'Build properties should include the provider fassade behavior');
+        $this->assertArrayHasKey('propel.behavior.default', $argument, 'Build properties should include the behavior default run list');
+
+        $runList = array_map(function($key) { return trim($key); }, explode(',', $argument['propel.behavior.default']));
+        $this->assertContains('providerBase', $runList, 'Build property default run list should include provider base behavior');
+        $this->assertContains('providerFassade', $runList, 'Build property default run list should include provider fassade behavior');
     }
-//    public function testProcess()
-//    {
-//        $container = new ContainerBuilder();
-//        $container
-//            ->register('foo')
-//            ->setPublic(false)
-//        ;
-//        $container
-//            ->register('bar')
-//            ->setPublic(false)
-//        ;
-//        $container
-//            ->register('moo')
-//            ->setArguments(array(new Reference('bar')))
-//        ;
-//
-//        $this->process($container);
-//
-//        $this->assertFalse($container->hasDefinition('foo'));
-//        $this->assertTrue($container->hasDefinition('bar'));
-//        $this->assertTrue($container->hasDefinition('moo'));
-//    }
-//
-//    public function testProcessRemovesUnusedDefinitionsRecursively()
-//    {
-//        $container = new ContainerBuilder();
-//        $container
-//            ->register('foo')
-//            ->setPublic(false)
-//        ;
-//        $container
-//            ->register('bar')
-//            ->setArguments(array(new Reference('foo')))
-//            ->setPublic(false)
-//        ;
-//
-//        $this->process($container);
-//
-//        $this->assertFalse($container->hasDefinition('foo'));
-//        $this->assertFalse($container->hasDefinition('bar'));
-//    }
-//
-//    public function testProcessWorksWithInlinedDefinitions()
-//    {
-//        $container = new ContainerBuilder();
-//        $container
-//            ->register('foo')
-//            ->setPublic(false)
-//        ;
-//        $container
-//            ->register('bar')
-//            ->setArguments(array(new Definition(null, array(new Reference('foo')))))
-//        ;
-//
-//        $this->process($container);
-//
-//        $this->assertTrue($container->hasDefinition('foo'));
-//        $this->assertTrue($container->hasDefinition('bar'));
-//    }
-//
-//    protected function process(ContainerBuilder $container)
-//    {
-//        $repeatedPass = new RepeatedPass(array(new AnalyzeServiceReferencesPass(), new RemoveUnusedDefinitionsPass()));
-//        $repeatedPass->process($container);
-//    }
 }

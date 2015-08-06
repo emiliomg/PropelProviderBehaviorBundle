@@ -2,16 +2,27 @@
 
 namespace EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler;
 
+use EmilioMg\Propel\ProviderBehaviorBundle\Exception\MissingDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
+/**
+ * Class AddProviderBehaviorCompilerPass
+ *
+ * @author  Emilio Markgraf <emilio.markgraf@gmail.com>
+ * @package EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection\Compiler
+ */
 class AddProviderBehaviorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
 
 //        Reconfigure Propel Bundle to build all the models with a provider
+        if (!$container->hasDefinition('propel.build_properties')) {
+            throw new MissingDefinitionException('Propel build_properties container definition is missing. Is the PropelBundle loaded in the AppKernel?');
+        }
+
         $definition = $container->getDefinition('propel.build_properties');
         $argument = $definition->getArgument(0);
 
