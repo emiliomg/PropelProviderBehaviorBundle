@@ -18,11 +18,21 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('emiliomg_propel_provider_behavior');
+        $rootNode = $treeBuilder->root('emilio_mg_propel_provider_behavior');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->booleanNode('auto_generate_services')
+                    ->defaultTrue()
+                ->end()
+                ->scalarNode('prefix')
+                    ->defaultValue('')
+                ->end()
+                ->scalarNode('suffix')
+                    ->defaultValue('')
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

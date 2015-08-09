@@ -39,34 +39,53 @@ class AddProviderBehaviorCompilerPass implements CompilerPassInterface
         $argumentDefault .= 'providerBase, providerFassade';
         $argument['propel.behavior.default'] = $argumentDefault;
 
-//        Enable cacheFile generation
-        if (!isset($argument['propel.behavior.provider.cachefile'])) {
-            $argument['propel.behavior.provider.cachefile'] = 'true';
+//        Enable cacheFile generation, if config says so
+        if (true === $container->getParameter('emilio_mg_propel_provider_behavior_auto_generate_services')) {
+            if (!isset($argument['propel.behavior.provider.cachefile'])) {
+                $argument['propel.behavior.provider.cachefile'] = 'true';
+            }
         }
 
         $definition->replaceArgument(0, $argument);
 
 
 //        Check if provider cache exists.
-//        If it does, use it to set the appropriate service definitions
-        $file = $container->getParameter('kernel.root_dir').'/propel/providerCache.json';
-        if (file_exists($file)) {
-            $providers = json_decode(file_get_contents($file), true);
-            if (JSON_ERROR_NONE == json_last_error()) {
-                if (is_array($providers)) {
-                    foreach ($providers as $provider) {
-                        $providerFullName = $provider['namespace'].'\\'.$provider['providerName'];
-                        $providerId = strtolower(
-                            $provider['package'].
-                            '.provider.'.
-                            strtolower($provider['modelName'])
-                        );
-                        if ('src.' === substr($providerId, 0, 4)) {
-                            $providerId = substr($providerId, 4);
-                        }
+//        If it does, use it to set the appropriate service definitions.
+//        Do this only if the config says so
+        if (true === $container->getParameter('emilio_mg_propel_provider_behavior_auto_generate_services')) {
+            $file = $container->getParameter('kernel.root_dir') . '/propel/providerCache.json';
+            if (file_exists($file)) {
+                $providers = json_decode(file_get_contents($file), true);
+                if (JSON_ERROR_NONE == json_last_error()) {
+                    if (is_array($providers)) {
+                        foreach ($providers as $provider) {
+                            $providerFullName = $provider['namespace'] . '\\' . $provider['providerName'];
+                            $modelName = strtolower($provider['modelName']);
+                            $package = strtolower($provider['package']);
+                            if ('src.' === substr($package, 0, 4)) {
+                                $package = substr($package, 4);
+                            }
 
-                        $definition = new Definition($providerFullName);
-                        $container->setDefinition($providerId, $definition);
+                            $providerIdCollection = array();
+                            if ($prefix = $container->getParameter('emilio_mg_propel_provider_behavior_auto_generate_service_prefix')) {
+                                $providerIdCollection[] = $prefix;
+                            }
+
+                            $providerIdCollection = array_merge($providerIdCollection,  array(
+                                $package,
+                                'provider',
+                                $modelName,
+                            ));
+
+                            if ($suffix = $container->getParameter('emilio_mg_propel_provider_behavior_auto_generate_service_suffix')) {
+                                $providerIdCollection[] = $suffix;
+                            }
+
+                            $providerId = implode('.', $providerIdCollection);
+
+                            $definition = new Definition($providerFullName);
+                            $container->setDefinition($providerId, $definition);
+                        }
                     }
                 }
             }

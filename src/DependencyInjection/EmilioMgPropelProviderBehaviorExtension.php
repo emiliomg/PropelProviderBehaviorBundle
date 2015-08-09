@@ -3,7 +3,6 @@
 namespace EmilioMg\Propel\ProviderBehaviorBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-//use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -22,8 +21,8 @@ class EmilioMgPropelProviderBehaviorExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-//        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-//        $loader->load('services.yml');
-
+        $container->setParameter('emilio_mg_propel_provider_behavior_auto_generate_services', $config['auto_generate_services']);
+        $container->setParameter('emilio_mg_propel_provider_behavior_auto_generate_service_prefix', $config['prefix']);
+        $container->setParameter('emilio_mg_propel_provider_behavior_auto_generate_service_suffix', $config['suffix']);
     }
 }
