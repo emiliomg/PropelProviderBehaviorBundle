@@ -1,7 +1,7 @@
 Propel has to be configured...
 new Propel\PropelBundle\PropelBundle(),
 
-new EmilioMg\Propel\ProviderBehaviorBundle\EmiliomgPropelProviderBehaviorBundle(),
+new EmilioMg\Propel\ProviderBehaviorBundle\EmilioMgPropelProviderBehaviorBundle(),
 
 php app/console propel:model:build
 php app/console cache:clear
