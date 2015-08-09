@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "emiliomg/propel-provider-behavior": "^1.0",
+        "emiliomg/propel-provider-behavior": "^1.1",
         "symfony/symfony": "^2.3",
         "propel/propel-bundle": "^1.2"
     },
